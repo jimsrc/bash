@@ -51,8 +51,8 @@ do
 	echo -e "\e[32m# ---> ${DIR_DST}"
 	echo -e "\e[1;32m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
-#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
-#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
+    #rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
+    #${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
 
 	#   
 	echo -e "\e[0m"
@@ -67,35 +67,70 @@ done
 echo 
 
 #+++++++++++++++++++++++++++++++++++++++++ git sync
+# NOTE: special treatment for git repositories!
 
 if [[ ${git_sense} == "dame" ]]; then
     GIT_SRC=${ROOT_DST}
-    color="\e[31m"
+    GIT_DST=${ROOT_SRC}
+    col1="\e[1;31m"
+    col2="\e[31m"
 elif [[ ${git_sense} == "toma" ]]; then
     GIT_SRC=${ROOT_SRC}
-    color="\e[32m"
+    GIT_DST=${ROOT_DST}
+    col1="\e[1;34m"
+    col2="\e[34m"
 else
     echo " ### ERROR ###: para git debe ser 'toma' o 'dame'!"
-    return 1
+    exit 1  # salir
 fi
 
 # setea el color de impresion en la sincronizacion de directorios git
-echo -e "$color"         
+echo -e "\e[0m"
+echo -e $col2
 
-for n in $(seq 0 1 $N_LAST)
-do
+for n in $(seq 0 1 $N_LAST); do
     # directorio q esta mas actualizado
-    DIR_SRC="$GIT_SRC/${DIR[$n]}/"                  
+    DIR_SRC="$GIT_SRC/${DIR[$n]}/"  
+    DIR_DST="$GIT_DST/${DIR[$n]}/"  
     echo " @ ${DIR_SRC} "
-    # encuentra los directorios q contengan un ".git" (excluyendo *bckp*)
+    # busco los directorios q contengan un ".git" (excluyendo *bckp*)
     exclude_list=`find ${DIR_SRC} -name .git -type d -not -path "*bckp*" -printf "%h " -prune`
     # nro de directorios git
     n_git=`echo ${exclude_list} | awk '{print NF}'` 
     echo " -----> NGIT: " ${n_git}
-    for m in $(seq 1 1 ${n_git})
-    do
-        dirname=`echo ${exclude_list} | awk '{print $'$m'}'`
-        echo " ----> ($m/$n_git): " $dirname
+
+    # iter over git repositories
+    for m in $(seq 1 1 ${n_git}); do
+        # source (git) directory
+        git_src=`echo ${exclude_list} | awk '{print $'$m'}'`
+        echo " ----> ($m/$n_git): " ${git_src}
+
+        # need to deduce the destination (git) directory
+        subdir=${git_src}   # copy that will change later
+        dirsplit=`echo ${git_src} | sed "s/\\// /g"` #convierte las "/" en " "
+        ndeep=`echo $dirsplit | awk '{print NF}'` # profundidad del directorio
+
+        # iter over subdirectory names in whole path
+        for d in $(seq 1 1 $ndeep); do
+            branch=`echo $dirsplit | awk '{print $'$d'}'`
+            #echo " ....branch....: " $branch
+            if [[ $branch == ${DIR[$n]} ]]; then
+                #echo " FOUND IT!!"
+                nd_ok=$d
+                break
+            else
+                subdir=`echo $subdir | sed "s/\\/$branch//g"`
+                #echo " ........dir2: "$subdir
+            fi
+        done
+        git_dst="${GIT_DST}${subdir}"
+        echo " -----> git_dst: ${git_dst}"
+
+        # let's rsync
+        echo -e $col1
+        # NOTE: NO back up!!!, and NO exclusions!
+        ${RSYNC} ${other_arg} "${git_src}" "${git_dst}"
+        echo -e "\e[0m" $col2
     done
 done
 
@@ -120,7 +155,7 @@ cp -p $ZSH_CUSTOM/alias.zsh $DIR_DROPBOX/bash/
 cp -p $ZSH_CUSTOM/alias.zsh /media/Elements/oficina/copias_bashrc/.     # por siaca
 cp -p $HOME/bash/sincronizar_TODO_at_jim.sh $DIR_DROPBOX/bash/.
 #
-# OPTIONS:
+# RSYNC OPTIONS:
 # -r, --recursive             recurse into directories
 # -v, --verbose               increase verbosity
 # -u, --update                skip files that are newer on the receiver
