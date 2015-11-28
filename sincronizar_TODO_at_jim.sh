@@ -1,6 +1,10 @@
 #!/bin/bash
 # author: jimmy j. masias meza
 #
+# argumentos:
+# $1: 'toma', 'dame'
+git_sense=$1
+#
 #i=0
 DIR[0]="actividad_solar"            #;i=$(($i+1))
 DIR[1]="materias_uba"
@@ -22,33 +26,80 @@ DIR[16]="data_omni"
 #DIR[17]="software"
 DIR[17]="papers"
 #
-HDDname='Elements'          # nombre de mi hdd externo
-#
 N_DIRS=${#DIR[@]}
 N_LAST=$[$N_DIRS-1] #17		# indice final de los directorios arriba
 #----------------------------------------------------------
+HDDname='Elements'                                  # nombre de mi hdd externo
+ROOT_SRC=$HOME                                      # directorio raiz local
+ROOT_DST=/media/$HDDname/oficina                    # directorio raiz destino
+#+++ agrega directorio de backup, y sufijo a c/archivo backupeado
+backup_arg='--backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`"'
+other_arg='-rvubthl --human-readable'
+RSYNC=/usr/bin/rsync                                # binario del sistema
 #
 for n in $(seq 0 1 $N_LAST)
 do
-    DIR_SRC="$HOME/${DIR[$n]}/"                     # directorio local (mi compu)
-    DIR_DST="/media/$HDDname/oficina/${DIR[$n]}/"   # directorio destino (i.e. usb)
+    DIR_SRC="$ROOT_SRC/${DIR[$n]}/"                 # directorio local (mi compu)
+    DIR_DST="$ROOT_DST/${DIR[$n]}/"                 # directorio destino (i.e. usb)
+
+    # linea con "--exclude dir1 --exclude dir2 ..."
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude %h  " -prune`  # encuentra los directorios q contengan un ".git"
+
 	echo -e "\e[37m------------------------------------------------------------------------------------------\e[0m"
 	echo -e "\e[32m########################################################### ($HOSTNAME) --> (HDD)\e[0m"
 	echo -e "\e[32m# <--- ${DIR_SRC}\e[0m"
 	echo -e "\e[32m# ---> ${DIR_DST}"
 	echo -e "\e[1;32m"
-	rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
+#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
+#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
+
 	#   
 	echo -e "\e[0m"
 	echo -e "\e[31m########################################################### ($HOSTNAME) <-- (HDD)\e[0m"
 	echo -e "\e[31m# ---> ${DIR_SRC}\e[0m"
 	echo -e "\e[31m# <--- ${DIR_DST}\e[0m"
 	echo -e "\e[1;31m"
-	rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST[$n]}" "${DIR_LOC[$n]}"
+	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
+	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
 done
-echo ""
+echo 
+
+#+++++++++++++++++++++++++++++++++++++++++ git sync
+
+if [[ ${git_sense} == "dame" ]]; then
+    GIT_SRC=${ROOT_DST}
+    color="\e[31m"
+elif [[ ${git_sense} == "toma" ]]; then
+    GIT_SRC=${ROOT_SRC}
+    color="\e[32m"
+else
+    echo " ### ERROR ###: para git debe ser 'toma' o 'dame'!"
+    return 1
+fi
+
+# setea el color de impresion en la sincronizacion de directorios git
+echo -e "$color"         
+
+for n in $(seq 0 1 $N_LAST)
+do
+    # directorio q esta mas actualizado
+    DIR_SRC="$GIT_SRC/${DIR[$n]}/"                  
+    echo " @ ${DIR_SRC} "
+    # encuentra los directorios q contengan un ".git" (excluyendo *bckp*)
+    exclude_list=`find ${DIR_SRC} -name .git -type d -not -path "*bckp*" -printf "%h " -prune`
+    # nro de directorios git
+    n_git=`echo ${exclude_list} | awk '{print NF}'` 
+    echo " -----> NGIT: " ${n_git}
+    for m in $(seq 1 1 ${n_git})
+    do
+        dirname=`echo ${exclude_list} | awk '{print $'$m'}'`
+        echo " ----> ($m/$n_git): " $dirname
+    done
+done
+
+echo -e "\e[0m"         # regresa al color blanco default
 #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
