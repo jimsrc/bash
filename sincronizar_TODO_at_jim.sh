@@ -7,7 +7,7 @@ git_sense=$1
 #
 #i=0
 DIR[0]="actividad_solar"            #;i=$(($i+1))
-DIR[1]="materias_uba"
+DIR[1]="ccin2p3"
 DIR[2]="bash"
 DIR[3]="application"
 DIR[4]="ubuntu"
@@ -15,7 +15,7 @@ DIR[5]="ASOC_ICME-FD"
 DIR[6]="simulacion"
 DIR[7]="ccmc"
 DIR[8]="python_scripts"
-DIR[9]="ccin2p3"
+DIR[9]="materias_uba"
 DIR[10]="papers_mios"
 DIR[11]="1_magnetocosmics"
 DIR[12]="informes"
@@ -35,7 +35,7 @@ ROOT_DST=/media/$HDDname/oficina                    # directorio raiz destino
 #+++ agrega directorio de backup, y sufijo a c/archivo backupeado
 backup_arg='--backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`"'
 other_arg='-rvubthl --human-readable'
-RSYNC=/usr/bin/rsync                                # binario del sistema
+RSYNC="/usr/bin/rsync"                                # binario del sistema
 #
 for n in $(seq 0 1 $N_LAST)
 do
@@ -47,8 +47,8 @@ do
 	echo -e "\e[32m# <--- ${DIR_SRC}\e[0m"
 	echo -e "\e[32m# ---> ${DIR_DST}"
     # linea con "--exclude dir1 --exclude dir2 ..."
-    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude \"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
-    echo " ----> EXCLUDE " ${exclude_arg}
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo " ----> EXCLUDE: " ${exclude_arg}
 	echo -e "\e[1;32m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
     #rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
@@ -61,8 +61,8 @@ do
 	echo -e "\e[31m########################################################### ($HOSTNAME) <-- (HDD)\e[0m"
 	echo -e "\e[31m# ---> ${DIR_SRC}\e[0m"
 	echo -e "\e[31m# <--- ${DIR_DST}\e[0m"
-    exclude_arg=`find ${DIR_DST} -name .git -type d -printf "--exclude \"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
-    echo " ----> EXCLUDE " ${exclude_arg}
+    exclude_arg=`find ${DIR_DST} -name .git -type d -printf "--exclude=\"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo -e "\e[31m ----> EXCLUDE: " ${exclude_arg} "\e[0m"
 	echo -e "\e[1;31m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST[$n]}" "${DIR_LOC[$n]}"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"

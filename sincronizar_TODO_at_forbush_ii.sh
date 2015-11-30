@@ -7,17 +7,17 @@ git_sense=$1
 #
 #i=0
 DIR[0]="actividad_solar"            #;i=$(($i+1))
-DIR[1]="1_magnetocosmics"
+DIR[1]="ccin2p3"
 DIR[2]="bash"
-DIR[3]="simulacion"
+DIR[3]="application"
 DIR[4]="ubuntu"
 DIR[5]="ASOC_ICME-FD"
-DIR[6]="application"
+DIR[6]="simulacion"
 DIR[7]="ccmc"
 DIR[8]="python_scripts"
 DIR[9]="materias_uba"
 DIR[10]="papers_mios"
-DIR[11]="ccin2p3"
+DIR[11]="1_magnetocosmics"
 DIR[12]="informes"
 DIR[13]="mathematica_notebooks"
 DIR[14]="charlas"
@@ -52,32 +52,29 @@ do
     #exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\`echo %h/// | sed \"s/h/nop/g\"\`\n "  -prune`
     #exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/\"  " -prune | sed "s/masias/NOP/g"`
     DIRsed=`echo ${DIR_SRC} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
-    #exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/*\"  " -prune | sed "s/${DIRsed}//g"`
-    exclude_arg="`find ${DIR_SRC} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
-    if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi
-    #exclude_arg="${exclude_arg}"
-    echo " ----> EXCLUDE:"${exclude_arg}
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/\"  " -prune | sed "s/${DIRsed}//g"`
+    echo " ----> EXCLUDE: " ${exclude_arg}
 	echo -e "\e[1;32m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
     #rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
     #${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
-    ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
+    #${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
 	#   
 
 	echo -e "\e[0m"
 	echo -e "\e[31m########################################################### ($HOSTNAME) <-- (HDD)\e[0m"
 	echo -e "\e[31m# ---> ${DIR_SRC}\e[0m"
 	echo -e "\e[31m# <--- ${DIR_DST}\e[0m"
-    DIRsed=`echo ${DIR_DST} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
-    #exclude_arg=`find ${DIR_DST} -name .git -type d -printf "--exclude=\"%h/*\"  " -prune | sed "s/${DIRsed}//g"`
-    exclude_arg="`find ${DIR_DST} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
-    if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi
-    echo -e "\e[31m ----> EXCLUDE:"${exclude_arg}"\e[0m"
+    DIRsed=`echo ${DIR_SRC} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/\"  " -prune | sed "s/${DIRsed}//g"`
+    echo -e "\e[31m ----> EXCLUDE: " ${exclude_arg} "\e[0m"
 	echo -e "\e[1;31m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST[$n]}" "${DIR_LOC[$n]}"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
 	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
-    ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
+    #${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
+    #echo " -----> DIR_SRC: " ${DIR_SRC}
+    #echo " -----> DIR_DST: " ${DIR_DST}
 done
 echo 
 
