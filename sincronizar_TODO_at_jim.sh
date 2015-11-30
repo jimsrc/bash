@@ -42,13 +42,13 @@ do
     DIR_SRC="$ROOT_SRC/${DIR[$n]}/"                 # directorio local (mi compu)
     DIR_DST="$ROOT_DST/${DIR[$n]}/"                 # directorio destino (i.e. usb)
 
-    # linea con "--exclude dir1 --exclude dir2 ..."
-    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude %h  " -prune`  # encuentra los directorios q contengan un ".git"
-
 	echo -e "\e[37m------------------------------------------------------------------------------------------\e[0m"
 	echo -e "\e[32m########################################################### ($HOSTNAME) --> (HDD)\e[0m"
 	echo -e "\e[32m# <--- ${DIR_SRC}\e[0m"
 	echo -e "\e[32m# ---> ${DIR_DST}"
+    # linea con "--exclude dir1 --exclude dir2 ..."
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude \"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo " ----> EXCLUDE " ${exclude_arg}
 	echo -e "\e[1;32m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
     #rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
@@ -56,17 +56,21 @@ do
     ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
 
 	#   
+
 	echo -e "\e[0m"
 	echo -e "\e[31m########################################################### ($HOSTNAME) <-- (HDD)\e[0m"
 	echo -e "\e[31m# ---> ${DIR_SRC}\e[0m"
 	echo -e "\e[31m# <--- ${DIR_DST}\e[0m"
+    exclude_arg=`find ${DIR_DST} -name .git -type d -printf "--exclude \"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo " ----> EXCLUDE " ${exclude_arg}
 	echo -e "\e[1;31m"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST[$n]}" "${DIR_LOC[$n]}"
 	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
 	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
-	${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
+    ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
     #echo " -----> DIR_SRC: " ${DIR_SRC}
     #echo " -----> DIR_DST: " ${DIR_DST}
+
 done
 echo 
 
