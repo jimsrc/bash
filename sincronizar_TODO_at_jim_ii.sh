@@ -7,17 +7,17 @@ git_sense=$1
 #
 #i=0
 DIR[0]="actividad_solar"            #;i=$(($i+1))
-DIR[1]="1_magnetocosmics"
+DIR[1]="ccin2p3"
 DIR[2]="bash"
-DIR[3]="simulacion"
+DIR[3]="application"
 DIR[4]="ubuntu"
 DIR[5]="ASOC_ICME-FD"
-DIR[6]="application"
+DIR[6]="simulacion"
 DIR[7]="ccmc"
 DIR[8]="python_scripts"
 DIR[9]="materias_uba"
 DIR[10]="papers_mios"
-DIR[11]="ccin2p3"
+DIR[11]="1_magnetocosmics"
 DIR[12]="informes"
 DIR[13]="mathematica_notebooks"
 DIR[14]="charlas"
@@ -33,44 +33,48 @@ HDDname='Elements'                                  # nombre de mi hdd externo
 ROOT_SRC=$HOME                                      # directorio raiz local
 ROOT_DST=/media/$HDDname/oficina                    # directorio raiz destino
 #+++ agrega directorio de backup, y sufijo a c/archivo backupeado
-backup_arg="--backup-dir=\"bckp\" --suffix=\"_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`\""  # back up argument
-other_arg='-rvubthl --human-readable'               # general args
-RSYNC="/usr/bin/rsync"                              # binario del sistema
+backup_arg='--backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`"'
+other_arg='-rvubthl --human-readable'
+RSYNC="/usr/bin/rsync"                                # binario del sistema
 #
 for n in $(seq 0 1 $N_LAST)
 do
     DIR_SRC="$ROOT_SRC/${DIR[$n]}/"                 # directorio local (mi compu)
     DIR_DST="$ROOT_DST/${DIR[$n]}/"                 # directorio destino (i.e. usb)
 
-
-    #+++++ local ---> HDD
 	echo -e "\e[37m------------------------------------------------------------------------------------------\e[0m"
 	echo -e "\e[32m########################################################### ($HOSTNAME) --> (HDD)\e[0m"
 	echo -e "\e[32m# <--- ${DIR_SRC}\e[0m"
 	echo -e "\e[32m# ---> ${DIR_DST}"
-    DIRsed=`echo ${DIR_SRC} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
-    # linea con "--exclude dir1 --exclude dir2 ..." (excluyo directorios con .git)
-    exclude_arg="`find ${DIR_SRC} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
-    if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
-    echo -e "\e[32m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;32m"
+    # linea con "--exclude dir1 --exclude dir2 ..."
+    exclude_arg=`find ${DIR_SRC} -name .git -type d -printf "--exclude=\"%h/\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo " ----> EXCLUDE: " ${exclude_arg}
+	echo -e "\e[1;32m"
+	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_LOC[$n]}" "${DIR_DST[$n]}"
+    #rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
     #${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
+    ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_SRC}" "${DIR_DST}"
 
+	#   
 
-    #+++++ HDD ---> local
 	echo -e "\e[0m"
 	echo -e "\e[31m########################################################### ($HOSTNAME) <-- (HDD)\e[0m"
 	echo -e "\e[31m# ---> ${DIR_SRC}\e[0m"
 	echo -e "\e[31m# <--- ${DIR_DST}\e[0m"
-    DIRsed=`echo ${DIR_DST} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
-    # linea con "--exclude dir1 --exclude dir2 ..." (excluyo directorios con .git)
-    exclude_arg="`find ${DIR_DST} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
-    if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
-    echo -e "\e[31m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;31m"
+    exclude_arg=`find ${DIR_DST} -name .git -type d -printf "--exclude=\"%h\"  " -prune`  # encuentra los directorios q contengan un ".git"
+    echo -e "\e[31m ----> EXCLUDE: " ${exclude_arg} "\e[0m"
+	echo -e "\e[1;31m"
+	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST[$n]}" "${DIR_LOC[$n]}"
+	#rsync -rvubthl --human-readable --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
 	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
+    ${RSYNC} ${other_arg} ${exclude_arg} --backup-dir="bckp" --suffix="_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`" "${DIR_DST}" "${DIR_SRC}"
+    #echo " -----> DIR_SRC: " ${DIR_SRC}
+    #echo " -----> DIR_DST: " ${DIR_DST}
+
 done
 echo 
 
-#exit 1
+
 
 #+++++++++++++++++++++++++++++++++++++++++ git sync
 # NOTE: special treatment for git repositories!
@@ -78,12 +82,12 @@ echo
 if [[ ${git_sense} == "dame" ]]; then
     GIT_SRC=${ROOT_DST}
     GIT_DST=${ROOT_SRC}
-    col1="\e[1;33m"         # orange: dame
-    col2="\e[33m"
+    col1="\e[1;31m"
+    col2="\e[31m"
 elif [[ ${git_sense} == "toma" ]]; then
     GIT_SRC=${ROOT_SRC}
     GIT_DST=${ROOT_DST}
-    col1="\e[1;34m"         # blue: toma
+    col1="\e[1;34m"
     col2="\e[34m"
 else
     echo " ### ERROR ###: para git debe ser 'toma' o 'dame'!"
@@ -130,14 +134,13 @@ for n in $(seq 0 1 $N_LAST); do
             fi
         done
         git_dst="${GIT_DST}${subdir}"
-        echo " ----> git_dst: ${git_dst}"
-        echo " url: " `cd ${git_src}; git config --get remote.origin.url`   ### OJO: hice un cd
+        echo " -----> git_dst: ${git_dst}"
 
         # let's rsync
         echo -e $col1
         # NOTE: NO back up!!!, and NO exclusions!
         #${RSYNC} ${other_arg} "${git_src}/" "${git_dst}/"
-        ${RSYNC} -av --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
+        ${RSYNC} -a --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
         echo -e "\e[0m" $col2
     done
 done

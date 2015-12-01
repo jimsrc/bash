@@ -53,7 +53,7 @@ do
     exclude_arg="`find ${DIR_SRC} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
     if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
     echo -e "\e[32m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;32m"
-    #${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
+    ${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
 
 
     #+++++ HDD ---> local
@@ -66,11 +66,11 @@ do
     exclude_arg="`find ${DIR_DST} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
     if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
     echo -e "\e[31m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;31m"
-	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
+	${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
 done
 echo 
 
-#exit 1
+
 
 #+++++++++++++++++++++++++++++++++++++++++ git sync
 # NOTE: special treatment for git repositories!
@@ -78,12 +78,12 @@ echo
 if [[ ${git_sense} == "dame" ]]; then
     GIT_SRC=${ROOT_DST}
     GIT_DST=${ROOT_SRC}
-    col1="\e[1;33m"         # orange: dame
-    col2="\e[33m"
+    col1="\e[1;31m"
+    col2="\e[31m"
 elif [[ ${git_sense} == "toma" ]]; then
     GIT_SRC=${ROOT_SRC}
     GIT_DST=${ROOT_DST}
-    col1="\e[1;34m"         # blue: toma
+    col1="\e[1;34m"
     col2="\e[34m"
 else
     echo " ### ERROR ###: para git debe ser 'toma' o 'dame'!"
@@ -130,14 +130,13 @@ for n in $(seq 0 1 $N_LAST); do
             fi
         done
         git_dst="${GIT_DST}${subdir}"
-        echo " ----> git_dst: ${git_dst}"
-        echo " url: " `cd ${git_src}; git config --get remote.origin.url`   ### OJO: hice un cd
+        echo " -----> git_dst: ${git_dst}"
 
         # let's rsync
         echo -e $col1
         # NOTE: NO back up!!!, and NO exclusions!
         #${RSYNC} ${other_arg} "${git_src}/" "${git_dst}/"
-        ${RSYNC} -av --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
+        ${RSYNC} -a --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
         echo -e "\e[0m" $col2
     done
 done
