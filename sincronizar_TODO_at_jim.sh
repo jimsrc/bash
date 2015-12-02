@@ -53,7 +53,7 @@ do
     exclude_arg="`find ${DIR_SRC} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
     if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
     echo -e "\e[32m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;32m"
-    #${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
+    ${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
 
 
     #+++++ HDD ---> local
@@ -66,7 +66,7 @@ do
     exclude_arg="`find ${DIR_DST} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
     if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
     echo -e "\e[31m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;31m"
-	#${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
+	${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_DST}" "${DIR_SRC}"
 done
 echo 
 
@@ -135,7 +135,7 @@ for n in $(seq 0 1 $N_LAST); do
 
         # let's rsync
         echo -e $col1
-        # NOTE: NO back up!!!, and NO exclusions!
+        # NOTE: NO back up!!!, and NO exclusions! (*)
         #${RSYNC} ${other_arg} "${git_src}/" "${git_dst}/"
         ${RSYNC} -av --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
         echo -e "\e[0m" $col2
@@ -143,6 +143,7 @@ for n in $(seq 0 1 $N_LAST); do
 done
 
 echo -e "\e[0m"         # regresa al color blanco default
+# (*): https://help.github.com/enterprise/11.10.340/admin/articles/backing-up-repository-data/
 #
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #
