@@ -33,7 +33,7 @@ HDDname='Elements'                                  # nombre de mi hdd externo
 ROOT_SRC=$HOME                                      # directorio raiz local
 ROOT_DST=/media/$HDDname/oficina                    # directorio raiz destino
 #+++ agrega directorio de backup, y sufijo a c/archivo backupeado
-backup_arg="--backup-dir=\"bckp\" --suffix=\"_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`\""  # back up argument
+backup_arg="--backup-dir=bckp --suffix=_bckp_`hostname`_`date +%d%b%Y_%H.%M.%S`"  # back up argument
 other_arg='-rvubthl --human-readable'               # general args
 RSYNC="/usr/bin/rsync"                              # binario del sistema
 #

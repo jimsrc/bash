@@ -1,0 +1,7 @@
+*.x
+*bckp*
+*BCKP*
+*sw[op]
+*.out
+*~
+*/
