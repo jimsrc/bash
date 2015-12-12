@@ -142,7 +142,7 @@ for n in $(seq 0 1 $N_LAST); do
         echo -e $col1
         # NOTE: NO back up!!!, and NO exclusions! (*)
         #${RSYNC} ${other_arg} "${git_src}/" "${git_dst}/"
-        ${RSYNC} -${git_arg} --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
+        ${RSYNC} ${git_arg} --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
         echo -e "\e[0m" $col2
     done
 done

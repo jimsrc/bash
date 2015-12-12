@@ -93,6 +93,7 @@ fi
 # setea el color de impresion en la sincronizacion de directorios git
 echo -e "\e[0m"
 echo -e $col2
+git_arg=-rltgoDvh   # igual q -a pero sin -p, y con -vh
 
 for n in $(seq 0 1 $N_LAST); do
     # directorio q esta mas actualizado
@@ -137,7 +138,7 @@ for n in $(seq 0 1 $N_LAST); do
         echo -e $col1
         # NOTE: NO back up!!!, and NO exclusions! (*)
         #${RSYNC} ${other_arg} "${git_src}/" "${git_dst}/"
-        ${RSYNC} -av --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
+        ${RSYNC} ${git_arg} --human-readable --delete --rsync-path="sudo -u git rsync" "${git_src}/" "${git_dst}/"
         echo -e "\e[0m" $col2
     done
 done
