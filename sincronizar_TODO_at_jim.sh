@@ -53,9 +53,12 @@ do
 	echo -e "\e[32m# <--- ${DIR_SRC}\e[0m"
 	echo -e "\e[32m# ---> ${DIR_DST}"
     DIRsed=`echo ${DIR_SRC} | sed "s/\\//\\\\\\\\\//g"` # readable pattern for sed (convierte "/" --> "\\/")
+    echo " scanning git directories..."
     # linea con "--exclude dir1 --exclude dir2 ..." (excluyo directorios con .git)
     exclude_arg="`find ${DIR_SRC} -name .git -type d -printf \"--exclude=\"%h/\"  \" -prune | sed \"s/${DIRsed}//g\"`"   # OK!
-    if [[ ${exclude_arg} == "--exclude=  " ]]; then exclude_arg="--exclude=*"; fi  # si el mismo ${DIR_SRC} tiene un .git
+    if [[ ${exclude_arg} == "--exclude=  " ]]; then 
+        exclude_arg="--exclude=*" # si el mismo ${DIR_SRC} tiene un .git
+    fi  
     echo -e "\e[32m ----> EXCLUDE (git directories): ${exclude_arg} \e[1;32m"
     ${RSYNC} ${other_arg} ${exclude_arg} ${backup_arg} "${DIR_SRC}" "${DIR_DST}"
 
