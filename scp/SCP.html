@@ -1,0 +1,903 @@
+
+<!-- saved from url=(0063)http://www.softpanorama.net/Net/Application_layer/SSH/scp.shtml -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+
+<title>SCP</title>
+<link rel="stylesheet" type="text/css" href="./SCP_files/main.css">
+</head>
+
+<body>
+
+<basefont face="Times" size="3">
+<table border="0" width="100%" id="table1"><tbody><tr>	<td rowspan="2" width="40%">
+<p align="center">
+<font face="Bernard MT Condensed" color="#FF0000" size="7">
+<a target="_blank" href="http://www.softpanorama.org/index.shtml">
+<font color="#FF0000">Softpanorama</font></a></font><b><br>
+</b><i><b><font size="2">May the source be with you, but remember the KISS principle ;-)</font></b></i></p>
+</td>
+<td colspan="6" align="center" valign="bottom">
+<form action="http://www.google.com/cse" id="cse-search-box">
+<input type="hidden" name="cx" value="partner-pub-4031247137266443:ye0t3e-czf5">
+<input type="hidden" name="ie" value="ISO-8859-1">
+<input type="text" name="q" size="60">
+<input type="submit" name="sa" value="Search">
+<img src="./SCP_files/poweredby_999999.gif" alt="Google">
+</form>
+</td></tr>
+<tr>
+<td bgcolor="#F5F5F5" align="center" width="9%">            
+<b><a href="http://www.softpanorama.net/switchboard.shtml">Contents</a></b></td>
+<td bgcolor="#F5F5F5" align="center" width="7%">            
+<b><a href="http://www.softpanorama.info/bulletin.shtml">Bulletin</a></b></td>
+<td bgcolor="#F5F5F5" align="center" width="16%">  
+<b><font size="2"><a href="http://www.softpanorama.info/scriptorama.shtml">
+		Scripting in shell and Perl</a></font></b></td>
+<td bgcolor="#F5F5F5" align="center" width="10%">
+<b><font size="2"><a href="http://www.softpanorama.net/netorama.shtml">Network troubleshooting</a></font></b></td>
+<td bgcolor="#F5F5F5" align="center" width="7%">
+<b>
+<a href="http://www.softpanorama.net/History/index.shtml">History</a></b></td>
+<td bgcolor="#F5F5F5" align="center" width="7%">
+<b>
+<a href="http://www.softpanorama.net/Bulletin/Humor/index.shtml">Humor</a></b></td>
+</tr>
+</tbody></table>
+<hr width="100%" noshade="" size="5" color="#FF0000">
+<center>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4031247137266443";
+/* upper */
+google_ad_slot = "4815841291";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="./SCP_files/show_ads.js">
+</script>
+</center>
+
+
+
+<h1>SCP</h1>
+
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" bgcolor="#D6D6D6" id="table1">
+	<tbody><tr>
+		<td width="11%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/SSH/scp.shtml#News">News</a></td>
+		<td width="23%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/ssh.shtml">SSH </a></td>
+		<td width="22%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/SSH/scp.shtml#Recommended_Links">Recommended 
+		Links</a></td>
+		<td width="14%" align="center">
+		<a href="http://www.softpanorama.net/Net/Application_layer/SSH/private_and_public_key_management.shtml">Private and Public key 
+		management</a></td>
+		<td width="14%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/SSH/scp.shtml#Reference">Reference</a></td>
+		<td width="8%" align="center"><a href="http://winscp.net/eng/index.php">
+		WinSCP </a></td>
+	</tr>
+	<tr>
+		<td width="11%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/SSH/ssh-keygen.shtml">ssh-keygen man 
+		page</a></td>
+		<td width="23%" align="center"><a href="http://www.softpanorama.net/Net/Application_layer/SSH/ssh_usage_in_pipes.shtml">SSH Usage 
+		in Pipes</a></td>
+		<td width="22%" align="center"><b><a href="http://www.softpanorama.net/Net/Application_layer/SSH/sftp.shtml">sftp</a></b> </td>
+		<td width="14%" align="center"><b><a href="http://www.softpanorama.net/Net/Application_layer/SSH/tips.shtml">Tips</a></b> </td>
+		<td width="14%" align="center"><b><a href="http://www.softpanorama.net/Net/net_humor.shtml">Humor</a></b>
+		</td>
+		<td width="8%" align="center"><a target="_blank" href="http://www.softpanorama.net/Net/Application_layer/SSH/scp.shtml#Etc">Etc</a></td>
+	</tr>
+</tbody></table>
+<div align="right">
+<table border="1" width="170" height="610" align="right">
+	<tbody><tr>
+		<td>
+		<script type="text/javascript"><!--
+google_ad_client = "pub-4031247137266443";
+/* 160x600, created 8/7/09 */
+google_ad_slot = "0371843916";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+		<script type="text/javascript" src="./SCP_files/show_ads.js">
+		
+</script>
+		</td>
+	</tr>
+</tbody></table>
+</div>
+
+<p>Utility scp is a part of SSH suit allows files to be copied between machines. 
+It is an updated version of an older utility named rcp, which is a part of rsh package 
+initially developed by Sun and is based on <b>scp</b> is based on BSD source code 
+from the Regents of the University of California. It works the same, except that 
+information it transfers (including the password used to log in) is encrypted. Also, 
+if you have set up pawwordless certificate or your. Like in rcp you also can use 
+older method based on <tt>.shosts</tt> file to allow you to SSH between machines 
+without using a password. There is a wrapper for scp allows passwords via Expect.<a href="http://search.cpan.org/~djberg/Net-SCP-Expect-0.12/Expect.pm"> 
+NetSCPExpect - search.cpan.org</a></p>
+
+<p>This is mainly command utility. GUI SCP clients are rare, as implementing it 
+requires additional functionality (directory listing at least). The most popular 
+is <b><a href="http://winscp.net/eng/index.php">WinSCP</a></b> which actually defaults 
+to the SFTP protocol. Even when operating in SCP mode, clients like WinSCP are typically 
+not pure SCP clients, as they must use other means to implement the additional functionality 
+(like the <tt>ls</tt> command).</p>
+
+<p>
+<!---google box ------->
+<table border="0" width="310" align="left" cellspacing="7" cellpadding="4">
+<tbody><tr>
+<td width="320" bgcolor="#FFFF00">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4031247137266443";
+/* 300x250, created 8/7/09 */
+google_ad_slot = "7437784337";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript" src="./SCP_files/show_ads.js">
+</script>
+</td>
+</tr>
+</tbody></table>
+<!---end of google box -------></p>
+
+<p>The general form of the command is similar to cp command: </p>
+<pre>	 scp <i>source-specification</i> <i>destination-specification</i></pre>
+
+<p>where <i>source-specification </i>indicates which file or directory is to be 
+copied, and <i>destination-specification</i> indicates where the copied material 
+is to be placed. Like in cp option <tt>-p</tt> Preserves modification times, access 
+times, and modes from the original file. </p>
+
+<p>Either the source or the destination may be on the remote machine; i.e., you 
+may copy files or directories into the account on the remote system OR copy them 
+from the account on the remote system into the account you are logged into. </p>
+
+<p>Example: </p>
+<pre>	 scp myfile user@server:myfile	</pre>
+To copy a directory, use the <tt>-r</tt> (recursive) option. Example:
+<pre>	 scp -r mydir user@server:mydir	</pre>
+
+<p>The format for the remote specification (source or destination) is: </p>
+<pre>	<a href="mailto:user@machine"><i>user</i>@<i>machine</i></a><i> </i>:filename	</pre>
+
+<p>where filename is the name (path) of the file or directory relative to the home 
+(login) directory on the remote system. For local file you use just filename.
+</p>
+
+<p>Just like the cp command, scp will overwrite an existing destination file. In 
+addition, if the destination is an existing directory, the copied material will 
+be placed into this directory. </p>
+
+<h3>Examples</h3>
+
+<ol>
+	<li>While logged into user on server, copy file "letter" into file "application" 
+	in remote account abc on sdcc3:
+	<pre>	scp letter abc@sdcc3:application	</pre>
+	</li>
+	<li>While logged into abc on sdcc3, copy file "foo" from remote account user 
+	on server into filename "bar" in abc:
+	<pre>	 scp user@server:foo bar	</pre>
+	</li>
+	<li>While logged into account user on server, copy file "garfield" from subdirectory 
+	"comix" into filename "fatcat" in subdirectory "stuff" in remote account abc 
+	on sdcc3:
+	<pre>	 scp comix/garfield abc@sdcc3:stuff/fatcat</pre>
+	</li>
+	<li>While logged into account abc on sdcc3, copy file "garfield" from subdirectory 
+	"comix" of account user on server into subdirectory "stuff" with the same name 
+	"garfield":
+	<pre>	 scp user@server:comix/garfield stuff
+	</pre>
+	</li>
+	<li>While logged into account abc on sdcc3 , copy subdirectory "Section" into 
+	a new subdirectory called "Section" in existing subdirectory "Chapter" in account 
+	user on server:
+	<pre>	 scp -r Section user@server:Chapter	</pre>
+	</li>
+	<li>From account abc on sdcc3, copy entire account to ir123 on iacs5. This needs 
+	to be done from the parent directory of the account to be moved.
+	<pre>	 cd
+	 cd ..
+	 scp -r abc ir123@iacs5:abc
+	</pre>
+	</li>
+</ol>
+
+<p>For more information about the scp (secure copy) command, check the on-line manual 
+page for scp: </p>
+<pre>	 man scp</pre>
+
+<p>SCP (Secure CoPy) and SSH in general can be used in batch mode without asking 
+for passwords. That is very convenient for scripts. </p>
+
+<h3>Procedure for creating rivate/public key par</h3>
+
+<p>1. In this instructions, the user name is the same in both machines. Instructions 
+for different user names could differ from these (but see note below!) </p>
+
+<p>2. The user keys will be stored in ~/.ssh in both machines. </p>
+
+<p>3. At the client, run <kbd>'ssh-keygen -t dsa'</kbd> to generate a key pair. 
+Accept default options by pressing return. Specially, do not enter any passphrase. 
+(Option -d seems to be an alias of -t dsa in some platforms). </p>
+
+<p>4. Change the permissions of the generated <kbd>.pub</kbd> file to 600 by commanding
+<kbd>chmod 600 id_dsa.pub</kbd> </p>
+
+<p>5. Copy the <strong>public</strong> key to the server with <kbd>scp id_dsa.pub 
+'<tt>user@server</tt>:~/.ssh/authorized_keys'</kbd>. (Caution: if that destination 
+file already exists on the server, copy first to a different file <tt>foo</tt> and 
+then append the contents with <kbd>cat foo &gt;&gt; authorized_keys</kbd> executed on 
+the server). </p>
+
+<p>6. Done! Verify that now you can connect directly from the client with <kbd>ssh
+<tt>user@server</tt></kbd> without being prompted for a password. </p>
+
+<p>7. If it doesn't work, verify that in the server your home directory, the .ssh 
+subdirectory, and the authorized_keys file do not have writing permissions to others. 
+If they do, they won't be considered to grant access. You can correct this with 
+something like: </p>
+<pre> chmod 755 ~
+ chmod 700 ~/.ssh
+ chmod 600 ~/.ssh/authorized_keys
+</pre>
+
+<p>8. If it still doesn't work, try changing the authorized_keys file name to authorized_keys2, 
+or ask your system administrator what file name is ssh actually using. </p>
+
+<p>9. If it worked, you can now run SCP in batch mode with the -B option, as in
+<kbd>scp -B <tt>foofile</tt> '<tt>user@server</tt>:~/foodir/'</kbd>. </p>
+
+<h3>Notes </h3>
+
+<p>The name of the server must have been registered in the <strong>known_hosts</strong>. 
+This can be done with a regular (with password) ssh connection, and accepting the 
+host as known. Then, the host name should be the same as the one accepted! If you 
+used <tt>user@server</tt> first, do not use <tt>user@server.domain.tk</tt> later 
+on! </p>
+
+<p>SSH protocol 2 is assumed in this procedure (it uses dsa keys). If your ssh configuration 
+files (at <kbd>/etc/ssh/</kbd>) do not establish this as a default, you may have 
+to force it with the -2 option of the ssh and scp. Moreover, if the default public 
+key is not configured to be "id_dsa.pub" you can specify what key to use for identification 
+with the -i option. </p>
+
+<p>The same procedure worked fine when the username was different in both machines. 
+I simply copied userA's public key at the end of userB's <kbd>authorized_keys</kbd> 
+file, then I could login from my client as userA with <kbd>ssh userB@server</kbd>.
+</p>
+
+<hr>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" width="100%" bgcolor="#E5E5E5">
+<tbody><tr>
+<td rowspan="3" align="center">
+<center><b>Top updates</b></center>
+<iframe src="./SCP_files/topupdates.html" width="100%" height="350">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
+</iframe>
+</td>
+<td width="40%" colspan="4">
+<center><b>Top visited</b></center>
+<iframe src="./SCP_files/topvisited.html" width="100%" height="250">&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
+</iframe>
+</td>
+</tr>
+<tr>
+<td width="40%" colspan="4">
+<center><b>Google Search</b></center>
+<center><form action="http://www.google.com/cse" id="cse-search-box" target="_blank">
+<input type="hidden" name="cx" value="partner-pub-4031247137266443:gc7406rpojx">
+<input type="hidden" name="ie" value="ISO-8859-1">
+<input type="text" name="q1" size="40">
+<input type="submit" name="sa" value="Search">
+</form></center>
+</td>
+</tr>
+<tr>
+<td width="10%" align="center" bgcolor="#FFFF00">
+<b><a href="http://www.softpanorama.info/bulletin.shtml"><font size="2">Bulletin</font></a></b></td>
+<td width="10%" align="center" bgcolor="#FFFF00">
+<a href="http://www.softpanorama.net/index.shtml#Latest">Latest</a></td>
+<td width="10%" align="center" bgcolor="#FFFF00">
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&prmd=ivns&source=lnt&tbs=qdr:y&sa=X&ei=aML0TaHgO4fUgAedxtjzCw&ved=0CAsQpwUoBQ&biw=1256&bih=801&cad=cbv#q=site:www.softpanorama.org&hl=en&lr=&tbo=1&prmd=ivns&source=lnt&tbs=qdr:w&sa=X&ei=csL0TYHsI4LagAeKu7DPCw&ved=0CAwQpwUoAw&fp=fb58e14853731932&biw=1256&bih=801">
+Past week</a>
+</td>
+<td width="10%" align="center" bgcolor="#FFFF00">
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&prmd=ivns&source=lnt&tbs=qdr:m&sa=X&ei=IMD0TdjLHMXUgQe9t6zfCw&ved=0CA0QpwUoBA">
+Past month</a>
+</td>
+</tr>
+</tbody></table>
+
+<hr>
+
+<h2><a name="News">Old News</a> ;-) </h2>
+
+<h4>[Aug 27, 2010]
+<a href="http://www.thegeekstuff.com/2009/10/how-to-execute-ssh-and-scp-in-batch-mode-only-when-passwordless-login-is-enabled/">
+How To Execute SSH and SCP in Batch Mode (Only when Passwordless login is enabled)</a> 
+by Ramesh Natarajan</h4>
+
+<blockquote>
+	<h6>October 28, 2009 </h6>
+
+	<p><b>2. scp -B option Usage Example</b> </p>
+
+	<p>If you use scp -B option, it will execute scp only if the passwordless login 
+	is enabled, else it will exit immediately without waiting for password.</p>
+	<pre>$ scp -B file root@IP:PATH</pre>
+
+	<p><b>SCP in Batch mode — Successful Case</b> </p>
+	<pre>local-host# scp -B /etc/yp.conf ramesh@remote-host:/tmp
+yp.conf            100   84     0.1KB/s   00:00
+</pre>
+
+	<p><b>SCP in Batch mode — Failure Case</b> </p>
+
+	<p>In this example, if scp is possible without authentication, the command will 
+	execute else it will exit as shown below.</p>
+	<pre>local-host# scp -B /etc/yp.conf ramesh@remote-host:/tmp
+<font color="red">Permission denied (publickey,password).
+lost connection</font></pre>
+</blockquote>
+
+<h4>Scp -- Secure File Transfer between UNIX machines</h4>
+
+<blockquote>
+
+	<p>Scp is an updated version of an older utility named Rcp. It works the same, 
+	except that information (including the password used to log in) is encrypted.
+	</p>
+
+	<p>Just like the cp command, scp will overwrite an existing destination file. 
+	In addition, if the destination is an existing directory, the copied material 
+	will be placed beneath the directory. </p>
+
+	<p>Also, if you have set up your .shosts file to allow you to ssh between machines 
+	without using a password as described in
+	<a href="http://acs.ucsd.edu/info/ssh.shtml#label3">help on setting up your 
+	.shosts file</a>, you will be able to scp files between machines without entering 
+	your password. </p>
+
+	<p>The general form of the command is: </p>
+	<pre>	 scp source-specification destination-specification	</pre>
+
+	<p>where source-specification indicates which file or directory is to be copied, 
+	and destination-specification indicates where the copied material is to be placed.
+	</p>
+
+	<p>Either the source or the destination may be on the remote machine; i.e., 
+	you may copy files or directories into the account on the remote system OR copy 
+	them from the account on the remote system into the account you are logged into.
+	</p>
+
+	<p>Example: </p>
+	<pre>	 scp myfile user@server:myfile
+	</pre>
+	To copy a directory, use the -r (recursive) option. Example:
+	<pre>	 scp -r mydir user@server:mydir
+	</pre>
+
+	<p>The format for the remote specification (source or destination) is: </p>
+	<pre>	user@machine:filename
+	</pre>
+
+	<p>where filename is the name (path) of the file or directory relative to the 
+	home (login) directory on the remote system. </p>
+
+	<p>The format for file specification on the local system is just: </p>
+	<pre>	filename
+	</pre>
+
+	<p>where fname is the name (path) relative to the current working directory 
+	on that system. </p>
+
+	<p><b>Examples of remote file copies</b> </p>
+	<ol>
+		<li>While logged into user on server, copy file "letter" into file "application" 
+		in remote account abc on sdcc3:
+		<pre>	 scp letter abc@sdcc3:application
+	</pre>
+		</li>
+		<li>While logged into abc on sdcc3, copy file "foo" from remote account 
+		user on server into filename "bar" in abc:
+		<pre>	 scp user@server:foo bar
+
+	</pre>
+		</li>
+		<li>While logged into account user on server, copy file "garfield" from 
+		subdirectory "comix" into filename "fatcat" in subdirectory "stuff" in remote 
+		account abc on sdcc3:
+		<pre>	 scp comix/garfield abc@sdcc3:stuff/fatcat
+	</pre>
+		</li>
+		<li>While logged into account abc on sdcc3, copy file "garfield" from subdirectory 
+		"comix" of account user on server into subdirectory "stuff" with the same 
+		name "garfield":
+		<pre>	 scp user@server:comix/garfield stuff	</pre>
+		</li>
+		<li>While logged into account abc on sdcc3 , copy subdirectory "Section" 
+		into a new subdirectory called "Section" in existing subdirectory "Chapter" 
+		in account user on server:
+		<pre>	 scp -r Section user@server:Chapter
+	</pre>
+		</li>
+		<li>From account abc on sdcc3, copy entire account to ir123 on iacs5. This 
+		needs to be done from the parent directory of the account to be moved.
+		<pre>	 cd
+	 cd ..
+	 scp -r abc ir123@iacs5:abc
+	</pre>
+		</li>
+	</ol>
+
+	<p>For more information about the scp (secure copy) command, check the on-line 
+	manual page for scp: </p>
+	<pre>	 man scp</pre>
+</blockquote>
+
+<h4>
+<a href="http://www.lesbell.com.au/Home.nsf/b8ec57204f60dfcb4a2568c60014ed0f/04eaff076bce249dca256fb6007f53e5?OpenDocument">
+Copying Files with scp</a></h4>
+
+<blockquote>
+
+	<p>To copy files between two machines, say 192.168.1.101 and 192.168.1.100, 
+	sit at 192.168.1.101 and use the following command: </p>
+
+	<p><tt>scp * 192.168.1.100:</tt></p>
+
+	<p>Simple as that! Assuming you are the same user id on both machines, this 
+	will copy all files in the current directory to your home directory on the destination 
+	machine, 192.168.1.100. The first thing the command will do, though, is ask 
+	you for your password on the remote system - once you supply that, then you'll 
+	see the files copied, with progress bars. </p>
+
+	<p>Now, if you want to copy only some files, e.g. all txt files, use a standard 
+	wildcard, like this: </p>
+
+	<p><tt>scp *.txt 192.168.1.100:</tt></p>
+
+	<p>Suppose you want to copy them to a destination directory other than your 
+	home directory, use: </p>
+
+	<p><tt>scp *.txt 192.168.1.100:/home/username/directory</tt></p>
+
+	<p>Of course, you have to have write permission on the target directory. </p>
+
+	<p>Suppose you want to copy files from the other machine back to the one you're 
+	on - then use this syntax: </p>
+
+	<p><tt>scp 192.168.1.100:*.txt .</tt></p>
+
+	<p>If you have a DNS or hosts file set up, then you can (and should) use hostnames 
+	in the command, like this: </p>
+
+	<p><tt>scp mail/* mailsrvr:/home/joe/mail</tt></p>
+
+	<p>This will copy the contents of the <tt>mail </tt>subdirectory (of the current 
+	directory) on this machine, to the directory<tt> /home/joe/mail</tt> on the 
+	machine <tt>mailsrvr</tt>. </p>
+</blockquote>
+
+<h2><a name="Recommended_Links">Recommended Links</a></h2>
+
+<center>
+<hr width="100%" noshade="" size="2" color="#FF0000">
+<b>In case of broken links 
+please try to use Google search. If you find the page please notify 
+us about new location</b>
+<form action="http://www.google.com/cse" id="cse-search-box">
+<input type="hidden" name="cx" value="partner-pub-4031247137266443:ye0t3e-czf5">
+<input type="hidden" name="ie" value="ISO-8859-1">
+<input type="text" name="q" size="60">
+<input type="submit" name="sa" value="Search">
+<img src="./SCP_files/poweredby_999999.gif" alt="Google">
+</form>
+
+
+<p><font color="#FF0000"><b>Internal pages updates by age:</b></font>
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&tbas=0&prmd=ivns&source=lnt&tbs=rltm:1&sa=X&ei=lx4BTo-YH9H2gAeX15j3DQ&ved=0CAoQpwUoAQ">
+Latest</a> :
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&biw=1256&bih=801&prmd=ivns&source=lnt&tbs=qdr:w&sa=X&ei=ahsBTu_ONYnb0QGx0dy8Dg&ved=0CAwQpwUoAw">
+Past week</a> :
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&prmd=ivns&source=lnt&tbs=qdr:m&sa=X&ei=IMD0TdjLHMXUgQe9t6zfCw&ved=0CA0QpwUoBA">
+Past month</a> :
+<a href="http://www.google.com/search?q=site:www.softpanorama.org&hl=en&lr=&tbo=1&prmd=ivns&source=lnt&tbs=qdr:y&sa=X&ei=IMD0TdjLHMXUgQe9t6zfCw&ved=0CA4QpwUoBQ">
+Past year</a>
+</p>
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4031247137266443";
+/* 728x15, created 8/7/09 */
+google_ad_slot = "5138458259";
+google_ad_width = 728;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript" src="./SCP_files/show_ads.js">
+</script>
+</center>
+<hr width="100%" noshade="" size="2" color="#FF0000">
+<ul>
+	<li><b><a href="http://en.wikipedia.org/wiki/Secure_copy">
+	<font color="#0044CC">Secure copy - Wikipedia, the free encyclopedia</font></a></b>
+	</li>
+	<li><a href="http://linux.about.com/od/commands/l/blcmdl1_scp.htm">
+	<font color="#0044CC">scp - Linux Command - Unix Command</font></a></li>
+	<li>
+	<a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/en-US/System_Administration_Guide_/Configuring_an_OpenSSH_Client-Using_the_scp_Command.html">
+	20.3.2. Using the scp Command</a></li>
+	<li><a href="http://www.hypexr.org/linux_scp_help.php">Example syntax for Secure 
+	Copy (scp)</a></li>
+	<li>
+	<a style="color: #04c; text-decoration: underline" href="http://www.atmos.albany.edu/facstaff/rmctc/ssh2/brandenb-Ssh.html">
+	http://www.atmos.albany.edu/facstaff/rmctc/ssh2/brandenb-Ssh.html</a> </li>
+	<li>
+	<a style="color: #04c; text-decoration: underline" href="http://www.openssh.com/manual.html">
+	OpenSSH manual</a> </li>
+	<li>
+	<a href="http://www.lesbell.com.au/Home.nsf/b8ec57204f60dfcb4a2568c60014ed0f/04eaff076bce249dca256fb6007f53e5?OpenDocument">
+	Copying Files with scp</a></li>
+</ul>
+
+<h2><a name="Reference">Reference</a></h2>
+
+Section: SSH (1)<br>
+Updated: November 8, 1995<br>
+
+<hr>scp - secure copy (remote file copy program)<p><b>scp</b> [ <b>-aAqQprvBCL1</b> 
+][ <b>-S</b> <i>path-to-ssh</i>][ <b>-o</b> <i>ssh-options</i>][ <b>-P</b> <i>port</i>][
+<b>-c</b> <i>cipher</i>][ <b>-i</b> <i>identity</i>]<br>
+[[ <b>user@</b> ] <b>host1:</b> ] <b>filename1</b> ...[[ <b>user@</b> ] <b>host2:</b> 
+] <b>filename2</b> </p>
+
+<p><b>Scp</b> copies files between hosts on a network. It uses <b>ssh</b> for data 
+transfer, and uses the same authentication and provides thesame security as <b>ssh.</b> 
+Unlike <b>rcp</b> , <b>scp</b> will ask for passwords or passphrases if they are 
+needed forauthentication.</p>
+
+<p>Any file name may contain a host and user specification to indicatethat the file 
+is to be copied to/from that host. Copies between tworemote hosts are permitted.</p>
+
+<p><b>Options </b></p>
+<dl compact="">
+	<dt>
+	<b>-a</b>
+	</dt>
+	<dd>
+	Turn on statistics display for each file.</dd>
+	<dt>
+	<b>-A</b>
+	</dt>
+	<dd>
+	Turn off statistics display for each file.</dd>
+	<dt>
+	<b>-c</b> <i>cipher</i></dt>
+	<dd>
+	Selects the cipher to use for encrypting the data transfer. Thisoption is directly 
+	passed to <b>ssh.</b>
+	</dd>
+	<dt>
+	<b>-i</b> <i>identity_file</i></dt>
+	<dd>
+	Selects the file from which the identity (private key) for RSA authentication 
+	is read. This option is directly passed to <b>ssh.</b>
+	</dd>
+	<dt>
+	<b>-L</b>
+	</dt>
+	<dd>
+	Use non privileged port. With this you cannot user hosts or rsa rhosts authentications, 
+	but it can be used to bypass some firewalls that dont allow privileged source 
+	ports to pass. Same as saying "-o UsePriviledgePort=no"or -P to ssh; -L is used 
+	due to exhaustion of suitable letters.</dd>
+	<dt>
+	<b>-1</b>
+	</dt>
+	<dd>
+	Force scp to use command "scp1" on the remote side instead of "scp".This may 
+	be necessary in some situations, if the remote system has"scp2" symlinked to 
+	"scp".</dd>
+	<dt>
+	<b>-o</b> <i>ssh-options</i></dt>
+	<dd>
+	Ssh options passed to ssh.</dd>
+	<dt>
+	<b>-p</b>
+	</dt>
+	<dd>
+	Preserves modification times, access times, and modes from the original file.</dd>
+	<dt>
+	<b>-q</b>
+	</dt>
+	<dd>
+	Turn off statistics display.</dd>
+	<dt>
+	<b>-Q</b>
+	</dt>
+	<dd>
+	Turn on statistics display.</dd>
+	<dt>
+	<b>-r</b>
+	</dt>
+	<dd>
+	Recursively copy entire directories.</dd>
+	<dt>
+	<b>-v</b>
+	</dt>
+	<dd>
+	Verbose mode. Causes <b>scp </b>and <b>ssh </b>to print debugging messages about 
+	their progress. This is helpful in debugging connection, authentication, and 
+	configuration problems.</dd>
+	<dt>
+	<b>-B</b>
+	</dt>
+	<dd>
+	Selects batch mode (prevents asking for passwords or pass phrases).</dd>
+	<dt>
+	<b>-C</b>
+	</dt>
+	<dd>
+	Compression enable. Passes the -C flag to <b>ssh </b>to enable compression.</dd>
+	<dt>
+	<b>-P</b> <i>port</i></dt>
+	<dd>
+	Specifies the port to connect to on the remote host. Note that this option is 
+	written with a capital P, because -p is already reserved for preserving the 
+	times and modes of the file in rcp.</dd>
+	<dt>
+	<b>-S</b> <i>path-to-ssh</i></dt>
+	<dd>
+	Specifies the path to ssh program.</dd>
+</dl>
+
+<p><b>ENVIRONMENT VARIABLES</b> </p>
+
+<p>You can turn scp statistics on or off by setting <b>SSH_SCP_STATS</b> or <b>SSH_NO_SCP_STATS</b> 
+environment variables. To turn on or off scp statistics for each file,use <b>SSH_ALL_SCP_STATS</b> 
+or <b>SSH_NO_ALL_SCP_STATS</b> environment variables. The default value of the statistics 
+can be setwhen the ssh is configured. Next the scp checks those environmentvariables 
+and after that command line options. </p>
+
+<p></p>
+
+<p></p>
+
+<p>SCP(1) OpenBSD Reference Manual SCP(1)</p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="NAME">
+<b>NAME</b> </a><br>
+<b>scp</b> - secure copy (remote file copy program)</p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="SYNOPSIS">
+<b>SYNOPSIS</b> </a><br>
+<b>scp</b> [ <b>-1246BCpqrv</b> ] [ <b>-c</b> <i>cipher</i>] [ <b>-F</b> <i>ssh_config</i>] 
+[ <b>-i</b> <i>identity_file</i>]<br>
+[ <b>-l</b> <i>limit</i>] [ <b>-o</b> <i>ssh_option</i>] [ <b>-P</b> <i>port</i>] 
+[ <b>-S</b> <i>program</i>]<br>
+[[<i>user</i>@]<i>host1</i>:]<i>file1</i> [<i>...</i>] [[<i>user</i>@]<i>host2</i>:]<i>file2</i></p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="DESCRIPTION">
+<b>DESCRIPTION</b> </a><br>
+<b>scp</b> copies files between hosts on a network. It uses
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a> for data<br>
+transfer, and uses the same authentication and provides the same security<br>
+as
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a>. Unlike
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=rcp&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+rcp(1)</a>, <b>scp</b> will ask for passwords or passphrases if<br>
+they are needed for authentication.</p>
+
+<p>Any file name may contain a host and user specification to indicate that<br>
+the file is to be copied to/from that host. Copies between two remote<br>
+hosts are permitted.</p>
+
+<p>The options are as follows:</p>
+
+<p><b>-1</b> Forces <b>scp</b> to use protocol 1.</p>
+
+<p><b>-2</b> Forces <b>scp</b> to use protocol 2.</p>
+
+<p><b>-4</b> Forces <b>scp</b> to use IPv4 addresses only.</p>
+
+<p><b>-6</b> Forces <b>scp</b> to use IPv6 addresses only.</p>
+
+<p><b>-B</b> Selects batch mode (prevents asking for passwords or passphras-<br>
+es).</p>
+
+<p><b>-C</b> Compression enable. Passes the <b>-C</b> flag to
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a> to enable com-<br>
+pression.</p>
+
+<p><b>-c</b> <i>cipher</i><br>
+Selects the cipher to use for encrypting the data transfer. This<br>
+option is directly passed to
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a>.</p>
+
+<p><b>-F</b> <i>ssh_config</i><br>
+Specifies an alternative per-user configuration file for <b>ssh</b> .<br>
+This option is directly passed to
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a>.</p>
+
+<p><b>-i</b> <i>identity_file</i><br>
+Selects the file from which the identity (private key) for RSA<br>
+authentication is read. This option is directly passed to<br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a>.</p>
+
+<p><b>-l</b> <i>limit</i><br>
+Limits the used bandwidth, specified in Kbit/s.</p>
+
+<p><b>-o</b> <i>ssh_option</i><br>
+Can be used to pass options to <b>ssh</b> in the format used in<br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh_config&sektion=5&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh_config(5)</a>. This is useful for specifying options for which<br>
+there is no separate <b>scp</b> command-line flag. For full details of<br>
+the options listed below, and their possible values, see<br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh_config&sektion=5&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh_config(5)</a>.</p>
+
+<p>AddressFamily<br>
+BatchMode<br>
+BindAddress<br>
+ChallengeResponseAuthentication<br>
+CheckHostIP<br>
+Cipher<br>
+Ciphers<br>
+Compression<br>
+CompressionLevel<br>
+ConnectionAttempts<br>
+ConnectionTimeout<br>
+GlobalKnownHostsFile<br>
+GSSAPIAuthentication<br>
+GSSAPIDelegateCredentials<br>
+Host<br>
+HostbasedAuthentication<br>
+HostKeyAlgorithms<br>
+HostKeyAlias<br>
+HostName<br>
+IdentityFile<br>
+IdentitiesOnly<br>
+LogLevel<br>
+MACs<br>
+NoHostAuthenticationForLocalhost<br>
+NumberOfPasswordPrompts<br>
+PasswordAuthentication<br>
+Port<br>
+PreferredAuthentications<br>
+Protocol<br>
+ProxyCommand<br>
+PubkeyAuthentication<br>
+RhostsRSAAuthentication<br>
+RSAAuthentication<br>
+ServerAliveInterval<br>
+ServerAliveCountMax<br>
+SmartcardDevice<br>
+StrictHostKeyChecking<br>
+TCPKeepAlive<br>
+UsePrivilegedPort<br>
+User<br>
+UserKnownHostsFile<br>
+VerifyHostKeyDNS</p>
+
+<p><b>-P</b> <i>port</i><br>
+Specifies the port to connect to on the remote host. Note that<br>
+this option is written with a capital `P', because <b>-p</b> is already<br>
+reserved for preserving the times and modes of the file in<br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=rcp&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+rcp(1)</a>.</p>
+
+<p><b>-p</b> Preserves modification times, access times, and modes from the<br>
+original file.</p>
+
+<p><b>-q</b> Disables the progress meter.</p>
+
+<p><b>-r</b> Recursively copy entire directories.</p>
+
+<p><b>-S</b> <i>program</i><br>
+Name of <i>program</i> to use for the encrypted connection. The program<br>
+must understand
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a> options.</p>
+
+<p><b>-v</b> Verbose mode. Causes <b>scp</b> and
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a> to print debugging messages<br>
+about their progress. This is helpful in debugging connection,<br>
+authentication, and configuration problems.</p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="DIAGNOSTICS">
+<b>DIAGNOSTICS</b> </a><br>
+<b>scp</b> exits with 0 on success or &gt;0 if an error occurred.</p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="SEE+ALSO">
+<b>SEE ALSO</b> </a><br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=rcp&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+rcp(1)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=sftp&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+sftp(1)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh(1)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh-add&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh-add(1)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh-agent&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh-agent(1)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh-keygen&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh-keygen(1)</a>,<br>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=ssh_config&sektion=5&arch=&apropos=0&manpath=OpenBSD+Current">
+ssh_config(5)</a>,
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=sshd&sektion=8&arch=&apropos=0&manpath=OpenBSD+Current">
+sshd(8)</a></p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="HISTORY">
+<b>HISTORY</b> </a><br>
+<b>scp</b> is based on the
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=rcp&sektion=1&arch=&apropos=0&manpath=OpenBSD+Current">
+rcp(1)</a> program in BSD source code from the Regents of the University of California.</p>
+
+<p>
+<a target="_blank" href="http://www.openbsd.org/cgi-bin/man.cgi?query=scp#end" name="AUTHORS">
+<b>AUTHORS</b> </a><br>
+Timo Rinne &lt;<a href="mailto:tri@iki.fi">tri@iki.fi</a>&gt;<br>
+Tatu Ylonen &lt;<a href="mailto:ylo@cs.hut.fi">ylo@cs.hut.fi</a>&gt;</p>
+
+<p><br>
+</p>
+
+<hr>
+<h2><a name="Etc">Etc</a></h2>
+<p align="left"><b><a href="http://www.softpanorama.net/Bulletin/Humor/last_but_not_least.shtml">The Last 
+but not Least</a></b></p>
+<table border="3" width="100%" bordercolor="#FFFF00" bgcolor="#FFFF00">
+<tbody><tr>
+<td align="center"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-4031247137266443";
+/* 728x15, created 8/7/09 */
+google_ad_slot = "5138458259";
+google_ad_width = 728;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript" src="./SCP_files/show_ads.js">
+</script></td>
+</tr>
+</tbody></table>
+<hr size="5" noshade="" color="#FF0000"><font face="Verdana" size="1"> 
+<p>Copyright © 1996-2013 by Dr. Nikolai Bezroukov. <a target="_blank" href="http://www.softpanorama.org/">www.softpanorama.org</a> 
+and its softpanorama.info and sofpanorama.net mirrors were created as a service to the UN Sustainable Development Networking 
+Programme (<a target="_blank" href="http://www.un.org/Depts/dhl/sflib/">SDNP</a>) in the author free time. This document 
+is an industrial compilation designed and <b>created exclusively for educational use</b> and is distributed under the
+<a href="http://www.softpanorama.net/Net/Application_layer/SSH/license.shtml">Softpanorama Content License</a>. Site uses AdSense so you need to be aware of Google privacy policy. 
+Original materials copyright belong to respective owners. <i><b>Quotes are made<font color="#FF0000"> for educational purposes 
+only</font> in compliance with the fair use doctrine. </b></i><b>This is a Spartan WHYFF (We Help You For Free) site written 
+by people for whom English is not a native language.</b> Grammar and spelling errors should be expected. <b>The site contain 
+some broken links as it develops like a living tree...</b></p>
+<p>You can use <a href="http://www.amazon.com/paypage/P2IAH3PXV1UDP">Amazon HonorSystem</a> to make a contribution, supporting this site</p>
+<p><b>Disclaimer:</b> </p>
+<p><i>The statements, views and opinions presented on this web page are those of the author and are not endorsed by, nor 
+do they necessarily reflect, the opinions of the author present and former employers, SDNP or any other organization the 
+author may be associated with.</i> <i>We do not warrant the correctness of the information provided or its fitness for any purpose.</i></p>
+</font> 
+
+<p><i>Last modified:
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%B, %d, %Y" startspan -->January, 27, 2013<!--webbot bot="Timestamp" i-checksum="32431" endspan --> </i></p>
+
+
+
+
+</body></html>
