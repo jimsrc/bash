@@ -3,7 +3,9 @@ pressed_ctrl_c=
 trap "pressed_ctrl_c=1" INT
 while true
 do
-    (trap "" INT; 
+    echo "((dummy sleep))" && sleep 40
+    echo "((another dummy sleep))" && sleep 40
+    (trap "" INT;   # (*1)
     sleep 0.2)&
     wait  #||  wait
     if [ "$pressed_ctrl_c" ]; then
@@ -16,9 +18,12 @@ do
             echo " ---> Exit gracefully..."
             exit 0 #break #exit 0
         fi
-        echo " -------> here?"
     else
         echo " running..."
     fi
 done
 exit 0
+#
+# (*1): this replaces the defined trap before. When 
+# ctrl-c is catched, the (...) routine will 
+# do "" (no intructions: nothing).
