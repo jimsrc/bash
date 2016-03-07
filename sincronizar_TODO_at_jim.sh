@@ -168,9 +168,10 @@ export ZSH_CUSTOM=$HOME/.oh-my-zsh/custom       # (no existe en el environment d
 export DIR_DROPBOX=$HOME/Dropbox/cosas_trabajo
 cp -p $HOME/.bashrc $DIR_DROPBOX/bash/.
 cp -p $HOME/.zshrc $DIR_DROPBOX/bash/.
-cp -p $ZSH_CUSTOM/alias.zsh $DIR_DROPBOX/bash/
+#cp -p $ZSH_CUSTOM/alias.zsh $DIR_DROPBOX/bash/
 cp -p $ZSH_CUSTOM/alias.zsh /media/Elements/oficina/copias_bashrc/.     # por siaca
 cp -p $HOME/bash/sincronizar_TODO_at_jim.sh $DIR_DROPBOX/bash/.
+cp -p $ZSH_CUSTOM/* $DIR_DROPBOX/oh-my-zsh_stuff/@jimpc/.
 #
 # RSYNC OPTIONS:
 # -r, --recursive             recurse into directories
@@ -187,4 +188,9 @@ cp -p $HOME/bash/sincronizar_TODO_at_jim.sh $DIR_DROPBOX/bash/.
 # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
 # -p, --perms                 preserve permissions
 #
+# -g, --group                 preserve group
+#     --devices               preserve device files (super-user only)
+#     --specials              preserve special files
+# -D                          same as --devices --specials
+# -o, --owner                 preserve owner (super-user only)
 ##
