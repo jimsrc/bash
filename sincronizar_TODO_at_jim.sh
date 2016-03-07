@@ -171,7 +171,7 @@ cp -p $HOME/.zshrc $DIR_DROPBOX/bash/.
 #cp -p $ZSH_CUSTOM/alias.zsh $DIR_DROPBOX/bash/
 cp -p $ZSH_CUSTOM/alias.zsh /media/Elements/oficina/copias_bashrc/.     # por siaca
 cp -p $HOME/bash/sincronizar_TODO_at_jim.sh $DIR_DROPBOX/bash/.
-cp -p $ZSH_CUSTOM/* $DIR_DROPBOX/oh-my-zsh_stuff/@jimpc/.
+cp -p $ZSH_CUSTOM/*.zsh $HOME/Dropbox/oh-my-zsh_stuff/@jimpc/.
 #
 # RSYNC OPTIONS:
 # -r, --recursive             recurse into directories
