@@ -9,7 +9,6 @@
 # $1 : *patron*.ext [string]
 # $2 : nro de dias [float or int]
 #
-#ls -l -h `find -name "$1" -type f -mtime "$2"`
-ls --color=tty -l -h `find -wholename "$1" -type f -mtime "$2"`
+ls -l `find -name "$1" -type f -mtime "$2"`
 #
 ##

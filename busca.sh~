@@ -10,6 +10,6 @@ PAL=$1
 # busco (marginando mayusculas/minusculas)
 # dentro del presente directorio:
 #
-find -ipath $PAL
+find -ipath "$PAL"
 #
 echo $PAL
