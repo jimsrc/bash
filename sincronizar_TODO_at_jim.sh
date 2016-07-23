@@ -100,7 +100,8 @@ fi
 # setea el color de impresion en la sincronizacion de directorios git
 echo -e "\e[0m"
 echo -e $col2
-git_arg=-rltgoDvh   # igual q -a pero sin -p, y con -vh
+#git_arg=-rltgoDvh   # igual q -a pero sin -p, y con -vh
+git_arg=-rltgoDvhp   # igual q -a, y con -vh (07.mar.2016)
 
 for n in $(seq 0 1 $N_LAST); do
     # directorio q esta mas actualizado
